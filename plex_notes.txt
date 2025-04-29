@@ -1,0 +1,26 @@
+
+
+DATABASE LOCATION (ON MAC):
+
+/Users/geno/Library/Application Support/Plex Media Server/Plug-in Support/Databases
+
+OPEN DATABASE:
+
+sqlite3 com.plexapp.plugins.library.db
+
+
+
+GET ALL OF THE VIDEO TITLES:
+
+select metadata_items.title from metadata_items;
+
+
+GET THE PLAYLIST TITLE WHEN GIVEN A VIDEO TITLE:
+
+SELECT 'Video:' AS type, title FROM metadata_items WHERE title = "14seconds" UNION ALL SELECT 'Playlist:' AS type, title FROM metadata_items WHERE id IN (SELECT playlist_id FROM play_queue_generators WHERE metadata_item_id IN (SELECT id FROM metadata_items WHERE title = "14seconds"));
+
+
+PROVIDE A LIST OF ALL VIDEO TITLES WITH THE PLAYLIST IN THE FIRST COLUMN AND VIDEO TITLE IN THE SECOND COLUMN:
+
+SELECT 'Playlist:' AS type, mi2.title, mi1.title FROM metadata_items mi1 JOIN play_queue_generators pqg ON mi1.id = pqg.metadata_item_id JOIN metadata_items mi2 ON pqg.playlist_id = mi2.id UNION ALL SELECT 'Video:' AS type, NULL, title FROM metadata_items;
+
